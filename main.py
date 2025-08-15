@@ -1,6 +1,6 @@
 import asyncio
 
-from models.bot import create
+from buisness_logic.bot import create
 from handlers.start import start_router
 from handlers.modification import modification_router
 
