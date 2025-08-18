@@ -21,27 +21,25 @@ class Statistics:
     score: int
     solved_at: datetime
 
-
 @dataclass(frozen=True)
 class Subjects:
     id: int
     name: str
     description: str
-
+    created_at: datetime
 
 @dataclass(frozen=True)
 class Topics:
     id: int
     text: str
     subject_id: int
-
+    created_at: datetime
 
 @dataclass(frozen=True)
 class Tests:
     id: int
-    created_at: datetime
     topic_id: int
-
+    created_at: datetime
 
 @dataclass(frozen=True)
 class Questions:
@@ -49,7 +47,6 @@ class Questions:
     test_id: int
     text: str
     created_at: datetime
-
 
 @dataclass(frozen=True)
 class Answers:
