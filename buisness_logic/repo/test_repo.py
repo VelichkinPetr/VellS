@@ -73,6 +73,7 @@ class TestsRepo:
                           topic_text: str, quest_text: str,
                           answers: str, is_correct: int):
 
+
         sql_commands = ['''INSERT  INTO `Subjects`(`name`, `description`)
                         VALUES (:sub_name, :description)''',
 
@@ -102,7 +103,10 @@ class TestsRepo:
                 {"quest_text": quest_text, "topic_text": topic_text},
                 {"answers": answers, "quest_text": quest_text, "is_correct": is_correct},
             )
-
+            if await self.get_sub(sub_name):
+                sql_commands = sql_commands[1:]
+                print(sql_commands)
+                data = data[1:]
             for i, sql_command in enumerate(sql_commands):
                 await db.execute(sql_command, data[i])
 
@@ -140,6 +144,22 @@ class TestsRepo:
                 raw = await cursor.fetchone()
                 objects[i] = objects[i](**dict(raw))
         return objects
+
+    async def get_sub(self, sub_name: str):
+        sql_command = '''SELECT * FROM `Subjects` WHERE `name` = :sub_name'''
+
+        data = ({"sub_name": sub_name})
+
+        async with aiosqlite.connect(self.db_path) as db:
+            db.row_factory = aiosqlite.Row
+
+            cursor = await db.execute(sql_command, data)
+            raw = await cursor.fetchone()
+
+            sub = Subjects(**dict(raw))
+            if sub.name == sub_name:
+                return True
+            return False
 
 
 async def main():
