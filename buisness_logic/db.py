@@ -38,6 +38,7 @@ class Topics:
 @dataclass(frozen=True)
 class Tests:
     id: int
+    number: int
     topic_id: int
     created_at: datetime
 
