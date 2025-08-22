@@ -11,9 +11,9 @@ class TopicsService:
     def __init__(self, repo: TopicsRepo):
         self.repo = repo
 
-    def search_topic_text(self, topic_text: str, list_topics: list[Topics]) -> bool:
+    def search_topic_name(self, topic_name: str, list_topics: list[Topics]) -> bool:
         for topic in list_topics:
-            if topic.text == topic_text:
+            if topic.name == topic_name:
                 return True
         return False
 
@@ -23,41 +23,41 @@ class TopicsService:
                 return True
         return False
 
-    async def add_topic(self, sub_name: str, topic_text: str) -> None:
+    async def add_topic(self, chapter_id: int, topic_name: str) -> None:
 
         """
-        :param sub_name: str,
-        :param topic_text: str
+        :param chapter_id: int,
+        :param topic_name: str
         :return: None
         """
         await self.repo.init_table()
 
-        if self.search_topic_text(topic_text, await self.repo.fetch_topics(sub_name)):
+        if self.search_topic_name(topic_name, await self.repo.fetch_topics(chapter_id)):
             return
-        await self.repo.create_topic(sub_name, topic_text)
+        await self.repo.create_topic(chapter_id, topic_name)
 
-    async def list_topics(self, sub_name: str) -> list[Topics]:
+    async def list_topics(self, chapter_id: int) -> list[Topics]:
 
         """
-        :param sub_name: str
+        :param chapter_id: int
         :return: list[Topics]
         """
-        return await self.repo.fetch_topics(sub_name)
+        return await self.repo.fetch_topics(chapter_id)
 
-    async def remove_topic(self, sub_name: str, topic_id: int) -> None:
+    async def remove_topic(self, chapter_id: int, topic_name: str) -> None:
 
         """
-        :param sub_name: str,
-        :param topic_id: int,
+        :param chapter_id: int,
+        :param topic_name: str,
         :return: None
         """
-        if not self.search_topic_id(topic_id, await self.repo.fetch_topics(sub_name)):
+        if not self.search_topic_name(topic_name, await self.repo.fetch_topics(chapter_id)):
             raise IntegrityError
-        await self.repo.remove_topic(topic_id)
+        await self.repo.remove_topic(chapter_id, topic_name)
 
-    async def find_id(self, sub_name: str, topic_text: str):
-        topics = await self.list_topics(sub_name)
+    async def find_id(self, chapter_id: int, topic_name: str):
+        topics = await self.list_topics(chapter_id)
         for topic in topics:
-            if topic.text == topic_text:
+            if topic.name == topic_name:
                 return topic.id
 
