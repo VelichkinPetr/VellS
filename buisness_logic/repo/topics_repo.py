@@ -15,26 +15,26 @@ class TopicsRepo:
         sql_command = '''
                     CREATE TABLE IF NOT EXISTS `Topics`(
                         `id` INTEGER PRIMARY KEY AUTOINCREMENT,
-                        `text` TEXT NOT NULL,
-                        `subject_id` INTEGER,
+                        `name` TEXT NOT NULL,
+                        `chapter_id` INTEGER,
                         `created_at` TEXT DEFAULT CURRENT_TIMESTAMP,
 
-                        CONSTRAINT `topics_subjects` 
-                        FOREIGN KEY (`subject_id`)
-                        REFERENCES Subjects(`id`));
+                        CONSTRAINT `topics_chapters` 
+                        FOREIGN KEY (`chapter_id`)
+                        REFERENCES Chapters(`id`));
                         '''
         async with aiosqlite.connect(self.db_path) as db:
             await db.executescript(sql_command)
             await db.commit()
 
-    async def create_topic(self, sub_name: str, topic_text: str) -> None:
+    async def create_topic(self, chapter_id: int, topic_name: str) -> None:
 
-        sql_command = '''INSERT INTO `Topics`(`text`, `subject_id`)
-                        VALUES (:topic_text, (SELECT `id` FROM `Subjects` WHERE `name` = :sub_name))'''
+        sql_command = '''INSERT INTO `Topics`(`name`, `chapter_id`)
+                        VALUES (:topic_name, :chapter_id)'''
         async with (aiosqlite.connect(self.db_path) as db):
             db.row_factory = aiosqlite.Row
-            data = ({"sub_name": sub_name,
-                     "topic_text": topic_text})
+            data = ({"chapter_id": chapter_id,
+                     "topic_name": topic_name})
 
             await db.execute(sql_command, data)
             await db.commit()
@@ -56,26 +56,26 @@ class TopicsRepo:
     #                return True
     #        return False
 
-    async def fetch_topics(self, sub_name: str) -> list[Topics] or None:
+    async def fetch_topics(self, chapter_id: int) -> list[Topics] | None:
 
         sql_command = """
-                        SELECT `id`, `text`, `subject_id`, `created_at` FROM `Topics`
-                        WHERE `subject_id` = (SELECT `id` FROM `Subjects` WHERE `name` = ?);
+                        SELECT `id`, `name`, `chapter_id`, `created_at` FROM `Topics`
+                        WHERE `chapter_id` = ?;
                         """
         async with aiosqlite.connect(self.db_path) as db:
-            cursor = await db.execute(sql_command, [sub_name])
+            cursor = await db.execute(sql_command, [chapter_id])
             all_topics = await cursor.fetchall()
 
             if all_topics is not None:
                 all_topics = [Topics(*topic) for topic in all_topics]
             return all_topics
 
-    async def remove_topic(self, topic_id: int) -> None:
+    async def remove_topic(self, chapter_id: int, topic_name: str) -> None:
 
         sql_command = """
                        DELETE FROM `Topics`
-                       WHERE `id` = ? ;
+                       WHERE `name` = ?  AND `chapter_id` = ?;
                       """
         async with aiosqlite.connect(self.db_path) as db:
-            await db.execute(sql_command, [topic_id])
+            await db.execute(sql_command, [topic_name, chapter_id])
             await db.commit()
