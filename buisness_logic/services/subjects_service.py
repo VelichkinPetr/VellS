@@ -54,3 +54,9 @@ class SubjectsService:
         if not self.search_sub_id(sub_id, await self.repo.fetch_subjects()):
             raise IntegrityError
         await self.repo.remove_subject(sub_id)
+
+    async def find_id(self, sub_name: str) -> int | None:
+        subjects = await self.list_subjects()
+        for subject in subjects:
+            if subject.name == sub_name:
+                return subject.id

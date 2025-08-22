@@ -47,7 +47,7 @@ class QuestionsService:
             raise IntegrityError
         await self.repo.remove_question(test_id, quest_id)
 
-    async def find_id(self, test_id: int, quest_text: str):
+    async def find_id(self, test_id: int, quest_text: str) -> int | None:
         questions = await self.list_questions(test_id)
         for question in questions:
             if question.text == quest_text:
