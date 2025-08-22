@@ -40,7 +40,7 @@ class QuestionsRepo:
             await db.execute(sql_command, data)
             await db.commit()
 
-    async def fetch_questions(self, test_id: int) -> list[Questions] or None:
+    async def fetch_questions(self, test_id: int) -> list[Questions] | None:
 
         sql_command = """
                         SELECT * FROM `Questions`
