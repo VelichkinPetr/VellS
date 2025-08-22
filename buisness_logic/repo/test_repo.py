@@ -16,7 +16,7 @@ class TestsRepo:
         sql_command = ''' 
                     CREATE TABLE IF NOT EXISTS `Tests`(
                         `id` INTEGER PRIMARY KEY AUTOINCREMENT,
-                        `number` INTEGER UNSIGNED UNIQUE,
+                        `number` INTEGER UNSIGNED,
                         `topic_id` INTEGER,
                         `created_at` TEXT DEFAULT CURRENT_TIMESTAMP,
                         
@@ -41,7 +41,7 @@ class TestsRepo:
             await db.execute(sql_command, data)
             await db.commit()
 
-    async def fetch_tests(self, topic_id: int) -> list[Tests] or None:
+    async def fetch_tests(self, topic_id: int) -> list[Tests] | None:
 
         sql_command = """
                         SELECT * FROM `Tests`
@@ -55,7 +55,7 @@ class TestsRepo:
                 all_tests = [Tests(*test) for test in all_tests]
             return all_tests
 
-    async def remove_topic(self, topic_id: int, test_num: int) -> None:
+    async def remove_test(self, topic_id: int, test_num: int) -> None:
 
         sql_command = """
                        DELETE FROM `Tests`
