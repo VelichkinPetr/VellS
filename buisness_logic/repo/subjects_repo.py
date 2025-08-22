@@ -52,7 +52,7 @@ class SubjectsRepo:
     #                return True
     #        return False
 
-    async def fetch_subjects(self) -> list[Subjects] or None:
+    async def fetch_subjects(self) -> list[Subjects] | None:
 
         sql_command = """
                         SELECT * FROM `Subjects`;
