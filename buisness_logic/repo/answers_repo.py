@@ -41,7 +41,7 @@ class AnswersRepo:
             await db.execute(sql_command, data)
             await db.commit()
 
-    async def fetch_answers(self, question_id: int):
+    async def fetch_answers(self, question_id: int) -> list[Answers] | None:
 
         sql_command = """
                         SELECT * FROM `Answers`
