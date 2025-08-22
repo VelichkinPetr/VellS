@@ -17,12 +17,6 @@ class TopicsService:
                 return True
         return False
 
-    def search_topic_id(self, topic_id: int, list_topics: list[Topics]) -> bool:
-        for topic in list_topics:
-            if topic.id == topic_id:
-                return True
-        return False
-
     async def add_topic(self, chapter_id: int, topic_name: str) -> None:
 
         """

@@ -16,12 +16,6 @@ class ChaptersService:
                 return True
         return False
 
-    def search_chapter_id(self, chapter_id: int, list_chapters: list[Chapters]) -> bool:
-        for chapter in list_chapters:
-            if chapter.id == chapter_id:
-                return True
-        return False
-
     async def add_chapter(self, sub_id: int, chapter_name: str) -> None:
 
         """

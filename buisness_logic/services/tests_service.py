@@ -47,7 +47,7 @@ class TestsService:
         """
         if not self.search_test_num(test_num, await self.repo.fetch_tests(topic_id)):
             raise IntegrityError
-        await self.repo.remove_topic(topic_id, test_num)
+        await self.repo.remove_test(topic_id, test_num)
 
     async def find_id(self, topic_id: int, test_num: int):
         tests = await self.list_tests(topic_id)
