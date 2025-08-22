@@ -29,10 +29,17 @@ class Subjects:
     created_at: datetime
 
 @dataclass(frozen=True)
+class Chapters:
+    id: int
+    name: str
+    subject_id: int
+    created_at: datetime
+
+@dataclass(frozen=True)
 class Topics:
     id: int
-    text: str
-    subject_id: int
+    name: str
+    chapter_id: int
     created_at: datetime
 
 @dataclass(frozen=True)
