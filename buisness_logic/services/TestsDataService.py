@@ -67,7 +67,7 @@ class TestsDataService:
 
 async def main():
     dotenv.load_dotenv()
-    db_path = os.getenv('PATH_DB')
+    db_path = '../../database.db'
 
     SUBJECTS_SERV = SubjectsService(SubjectsRepo(db_path))
     CHAPTERS_SERV = ChaptersService(ChaptersRepo(db_path))
@@ -78,13 +78,13 @@ async def main():
 
 
     t = TestsDataService([SUBJECTS_SERV, CHAPTERS_SERV, TOPICS_SERV, TESTS_SERV, QUESTIONS_SERV, ANSWERS_SERV])
-    await t.add_test('Математика', 'описание матем', 'Арифметика', 'Простые числа',
-                     1, 'Вопрос Простые числа №1', '1.....2....3...4...5', 2)
+    #await t.add_test('Математика', 'описание матем', 'Арифметика', 'Простые числа',
+    #                 1, 'Вопрос Простые числа №1', '1.....2....3...4...5', 2)
     print('Предметы:',[i.name for i in await t.get_subjects()])
     print('Разделы:', [i.name for i in await t.get_chapters(1)])
     print('Темы:',[i.name for i in await t.get_topics(1)])
     print('Тесты:',[i.number for i in await t.get_tests(1)])
-    print('Вопросы:',[i.text for i in await t.get_questions(1)])
+    print('Вопросы:',[i.text for i in await t.get_questions(5)])
     print('Ответ на вопрос:',[i.text for i in await t.get_answers(1)])
 
 

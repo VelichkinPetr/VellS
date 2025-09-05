@@ -23,7 +23,7 @@ class SubjectsRepo:
             await db.executescript(sql_command)
             await db.commit()
 
-    async def create_subject(self, sub_name: str, description: str) -> None:
+    async def create_subject(self, sub_name: str, description: str = None) -> None:
 
         sql_command = '''INSERT  INTO `Subjects`(`name`, `description`)
                         VALUES (:sub_name, :description)'''
