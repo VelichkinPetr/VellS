@@ -1,22 +1,19 @@
-from aiogram import Router,types
+from aiogram import Router, types, F
 from aiogram.filters import command
+from aiogram.fsm.context import FSMContext
+from buisness_logic.services.TestsDataService import TestsDataService
+from buisness_logic.keyboards import create_keyboard
+from buisness_logic.states import TestState
 
 start_router = Router()
 
-
+@start_router.callback_query(F.data.startswith('catalog'))
 @start_router.message(command.CommandStart())
-async def start(message: types.Message):
+async def start(update: types.Message | types.CallbackQuery, test_data_service: TestsDataService):
+    subjects = await test_data_service.get_subjects()
+    keyboard = create_keyboard(subjects, '')
 
-    book_repo = BookRepo("database.db")
-    user_stats_repo = UserStatsRepo("database.db")
-
-    await user_stats_repo.init_tables()
-    await user_stats_repo.create_stats(message.from_user.id)
-
-    await book_repo.init_tables()
-    await message.answer(f'«BookTracker» — бот для учёта чтения книг.\n'
-                         f'С его помощью пользователь может:\n'
-                         f'/add_book or /a <title> - Добавить книгу в список чтения.\n'
-                         f'/mark_read or /m <id> <pages> - Отметить прочитанные страницы.\n'
-                         f'/list_books or /l - Просмотреть список своих книг и прогресс по каждой из них.\n'
-                         f'/remove_book or /r <book_id> - Удалить книгу из учёта.')
+    if isinstance(update, types.Message):
+        await update.answer('Subjects choise',reply_markup=keyboard, cache_time=60)
+    else:
+        await update.message.edit_text(text='Subjects choise', reply_markup=keyboard)
